@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - BRAND</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">BRAND Admin</div>
+            <nav class="admin-nav">
+                <a href="#" data-section="dashboard" class="nav-link active">Dashboard</a>
+                <a href="#" data-section="products" class="nav-link">Produits</a>
+                <a href="#" data-section="categories" class="nav-link">Catégories</a>
+                <a href="#" data-section="banners" class="nav-link">Bannières</a>
+                <a href="#" data-section="pages" class="nav-link">Pages</a>
+                <a href="#" data-section="size-guides" class="nav-link">Guides des tailles</a>
+                <a href="#" data-section="media" class="nav-link">Médias</a>
+                <a href="#" data-section="settings" class="nav-link">Paramètres</a>
+                <button id="logoutBtn" style="width: 100%; margin-top: auto; padding: var(--spacing-md); background: var(--color-accent); color: var(--color-bg); border: none; border-radius: var(--radius-md); cursor: pointer; font-weight: 600;">Déconnexion</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div id="userInfo"></div>
+            </header>
+
+            <div class="admin-content" id="adminContent"></div>
+        </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/firebase-init.js"></script>
+    <script src="/admin/admin.js"></script>
+</body>
+</html>
