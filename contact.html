@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - BRAND</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">BRAND</a>
+            </div>
+            <div class="header-actions">
+                <a href="/" class="icon-btn" aria-label="Accueil" title="Accueil">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main style="max-width: 600px; margin: 0 auto; padding: var(--spacing-xl) var(--spacing-lg);">
+        <h1 style="margin-bottom: var(--spacing-lg);">Nous contacter</h1>
+        
+        <form id="contactForm" style="margin-bottom: var(--spacing-xl);">
+            <div style="margin-bottom: var(--spacing-lg);">
+                <label style="display: block; margin-bottom: var(--spacing-sm); font-weight: 600;">Nom</label>
+                <input type="text" id="contactName" required style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-sans);">
+            </div>
+
+            <div style="margin-bottom: var(--spacing-lg);">
+                <label style="display: block; margin-bottom: var(--spacing-sm); font-weight: 600;">Email</label>
+                <input type="email" id="contactEmail" required style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-sans);">
+            </div>
+
+            <div style="margin-bottom: var(--spacing-lg);">
+                <label style="display: block; margin-bottom: var(--spacing-sm); font-weight: 600;">Sujet</label>
+                <input type="text" id="contactSubject" required style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-sans);">
+            </div>
+
+            <div style="margin-bottom: var(--spacing-lg);">
+                <label style="display: block; margin-bottom: var(--spacing-sm); font-weight: 600;">Message</label>
+                <textarea id="contactMessage" required style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-sans); min-height: 200px;"></textarea>
+            </div>
+
+            <button type="submit" style="width: 100%; padding: var(--spacing-md); background: var(--color-accent); color: var(--color-bg); border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all var(--transition);">Envoyer</button>
+        </form>
+
+        <div style="background: var(--color-accent-light); padding: var(--spacing-lg); border-radius: var(--radius-md);">
+            <h2 style="font-size: 1.2rem; margin-bottom: var(--spacing-md);">Informations de contact</h2>
+            <p style="margin-bottom: var(--spacing-md);">
+                <strong>Email:</strong> <a href="mailto:contact@yourdomain.com" style="color: var(--color-accent); text-decoration: none;">contact@yourdomain.com</a>
+            </p>
+            <p style="margin-bottom: var(--spacing-md);">
+                <strong>Téléphone:</strong> <a href="tel:+33123456789" style="color: var(--color-accent); text-decoration: none;">+33 1 23 45 67 89</a>
+            </p>
+            <p>
+                <strong>Adresse:</strong> 123 Rue de la Mode, 75000 Paris, France
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2024 BRAND. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/firebase-init.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async e => {
+            e.preventDefault();
+
+            try {
+                await db.collection('messages').add({
+                    name: document.getElementById('contactName').value,
+                    email: document.getElementById('contactEmail').value,
+                    subject: document.getElementById('contactSubject').value,
+                    message: document.getElementById('contactMessage').value,
+                    createdAt: new Date(),
+                    read: false
+                });
+
+                alert('Message envoyé avec succès!');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Erreur lors de l\'envoi du message.');
+            }
+        });
+    </script>
+</body>
+</html>

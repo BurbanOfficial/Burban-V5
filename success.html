@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande confirmée - BRAND</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">BRAND</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="mainContent" style="text-align: center; padding: var(--spacing-xl);">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto var(--spacing-lg); color: var(--color-accent);">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            
+            <h1 style="font-size: 2rem; margin-bottom: var(--spacing-md);">Commande confirmée!</h1>
+            
+            <p style="color: var(--color-text-light); font-size: 1.1rem; margin-bottom: var(--spacing-lg);">
+                Merci pour votre achat. Un email de confirmation a été envoyé à votre adresse.
+            </p>
+
+            <div id="orderDetails" style="background: var(--color-accent-light); padding: var(--spacing-lg); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg); text-align: left;"></div>
+
+            <div style="display: flex; gap: var(--spacing-md); justify-content: center;">
+                <a href="/" class="btn-checkout" style="display: inline-block; padding: var(--spacing-sm) var(--spacing-lg); background: var(--color-accent); color: var(--color-bg); text-decoration: none; border-radius: var(--radius-md);">Continuer les achats</a>
+                <a href="/orders" class="btn-checkout" style="display: inline-block; padding: var(--spacing-sm) var(--spacing-lg); background: var(--color-accent-light); color: var(--color-text); text-decoration: none; border-radius: var(--radius-md); border: 1px solid var(--color-border);">Mes commandes</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>À propos</h3>
+                <ul>
+                    <li><a href="/about">À propos de nous</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Légal</h3>
+                <ul>
+                    <li><a href="/privacy">Politique de confidentialité</a></li>
+                    <li><a href="/terms">Conditions d'utilisation</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BRAND. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/firebase-init.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        // Get session ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const sessionId = params.get('session_id');
+
+        if (!sessionId) {
+            document.getElementById('mainContent').innerHTML = '<h1>Session non trouvée</h1>';
+        } else {
+            // Fetch order details
+            async function loadOrderDetails() {
+                try {
+                    const user = auth.currentUser;
+                    if (!user) {
+                        document.getElementById('orderDetails').innerHTML = '<p>Veuillez vous connecter pour voir les détails de votre commande.</p>';
+                        return;
+                    }
+
+                    const snapshot = await db.collection('orders')
+                        .where('stripeSessionId', '==', sessionId)
+                        .where('userId', '==', user.uid)
+                        .limit(1)
+                        .get();
+
+                    if (snapshot.empty) {
+                        document.getElementById('orderDetails').innerHTML = '<p>Commande non trouvée.</p>';
+                        return;
+                    }
+
+                    const order = snapshot.docs[0].data();
+                    const date = new Date(order.createdAt.toDate()).toLocaleDateString('fr-FR');
+
+                    document.getElementById('orderDetails').innerHTML = `
+                        <p><strong>Numéro de commande:</strong> ${sessionId.substring(0, 20)}...</p>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Montant:</strong> ${formatPrice(order.amount)}</p>
+                        <p><strong>Email:</strong> ${order.email}</p>
+                    `;
+                } catch (error) {
+                    console.error('Error loading order:', error);
+                    document.getElementById('orderDetails').innerHTML = '<p>Erreur lors du chargement de la commande.</p>';
+                }
+            }
+
+            // Wait for auth to be ready
+            auth.onAuthStateChanged(() => {
+                loadOrderDetails();
+            });
+        }
+
+        // Clear cart
+        localStorage.removeItem('cart');
+    </script>
+</body>
+</html>

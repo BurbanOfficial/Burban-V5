@@ -1,0 +1,14 @@
+{
+  "name": "streetwear-ecommerce",
+  "version": "1.0.0",
+  "description": "Streetwear e-commerce platform with CMS",
+  "scripts": {
+    "dev": "firebase emulators:start",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
+  },
+  "devDependencies": {
+    "firebase-tools": "^12.0.0"
+  }
+}
